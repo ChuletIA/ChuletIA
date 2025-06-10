@@ -52,6 +52,40 @@ layout: default
   <textarea id="inputText" placeholder="Pega aquí el texto a resumir"></textarea>
 
   <input type="file" id="pdfInput" accept="application/pdf" style="margin-left:10px;" />
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+<script>
+  const pdfInput = document.getElementById('pdfInput');
+  const inputText = document.getElementById('inputText');
+
+  pdfInput.addEventListener('change', async function() {
+    const file = this.files[0];
+    if (file && file.type === "application/pdf") {
+      const reader = new FileReader();
+
+      reader.onload = async function() {
+        const typedarray = new Uint8Array(this.result);
+
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        let fullText = "";
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const text = content.items.map(item => item.str).join(" ");
+          fullText += text + "\n";
+        }
+
+        inputText.value = fullText;
+        alert("Texto del PDF cargado correctamente.");
+      };
+
+      reader.readAsArrayBuffer(file);
+    } else {
+      alert("Por favor selecciona un archivo PDF válido.");
+    }
+  });
+</script>
 
   <select id="menu-chuletas">
     <option value="resumen">Resumen</option>
