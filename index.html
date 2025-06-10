@@ -20,13 +20,13 @@ layout: default
       gap: 10px;
     }
     .cuadro-chuleta {
-      width: 7cm; /* 7 cm = 264 px aproximadamente */
-      height: 5cm; /* 5 cm = 188 px aproximadamente */
-      border: 1px solid #ccc;
-      padding: 10px;
-      box-sizing: border-box;
-      overflow: auto;
-    }
+  width: 5cm;  /* 5 cm = 188 px */
+  height: 7cm; /* 7 cm = 264 px */
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+}
     #tokens {
       position: fixed;
       top: 10px;
@@ -149,8 +149,10 @@ const resultado = `Tipo: ${tipoChuleta}\nResumen:\n${data.choices[0].message.con
       const contenedor = document.getElementById('resultados');
       const nuevoCuadro = document.createElement('div');
       nuevoCuadro.className = 'cuadro-chuleta';
-      nuevoCuadro.textContent = resultado;
-      contenedor.appendChild(nuevoCuadro);
+nuevoCuadro.textContent = resultado;
+if (tipoChuleta === "resumen") {
+  nuevoCuadro.style.fontSize = "9px";
+}      contenedor.appendChild(nuevoCuadro);
     };
   </script>
 
