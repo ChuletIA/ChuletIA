@@ -139,8 +139,33 @@ const respuesta = await fetch("https://chuletia.infoclearcastnotes.workers.dev/"
   })
 });
 
-const data = await respuesta.json();
-const resultado = `Tipo: ${tipoChuleta}\nResumen:\n${data.choices[0].message.content}`;
+try {
+  const data = await respuesta.json();
+
+  // Verificamos que haya contenido válido
+  const resumen = data?.choices?.[0]?.message?.content || "No se pudo generar la chuleta.";
+
+  const resultado = `Tipo: ${tipoChuleta}\nResumen:\n${resumen}`;
+
+  // Reducir tokens
+  tokens -= tokensPorChuleta;
+  actualizarTokens();
+
+  // Mostrar resultado
+  const contenedor = document.getElementById('resultados');
+  const nuevoCuadro = document.createElement('div');
+  nuevoCuadro.className = 'cuadro-chuleta';
+  nuevoCuadro.textContent = resultado;
+
+  if (tipoChuleta === "resumen") {
+    nuevoCuadro.style.fontSize = "9px";
+  }
+
+  contenedor.appendChild(nuevoCuadro);
+} catch (error) {
+  alert("Ocurrió un error al generar la chuleta. Verifica que el Worker esté funcionando.");
+  console.error(error);
+}
       // Reducir tokens
       tokens -= tokensPorChuleta;
       actualizarTokens();
