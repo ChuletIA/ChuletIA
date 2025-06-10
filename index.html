@@ -128,8 +128,19 @@ layout: default
 
       // Simulamos llamada a ChatGPT 4mini para crear resumen
       // Aquí debes conectar tu API de OpenAI o el método real
-      const resultado = `Tipo: ${tipoChuleta}\nResumen:\n${texto.substring(0, 150)}...`;
+const respuesta = await fetch("https://chuletia.infoclearcastnotes.workers.dev/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    text: texto,
+    tipo: tipoChuleta
+  })
+});
 
+const data = await respuesta.json();
+const resultado = `Tipo: ${tipoChuleta}\nResumen:\n${data.choices[0].message.content}`;
       // Reducir tokens
       tokens -= tokensPorChuleta;
       actualizarTokens();
