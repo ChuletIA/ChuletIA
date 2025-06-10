@@ -1,0 +1,113 @@
+---
+layout: default
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ site.title }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #inputText {
+      width: 400px;
+      height: 100px;
+    }
+    #resultados {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .cuadro-chuleta {
+      width: 7cm; /* 7 cm = 264 px aproximadamente */
+      height: 5cm; /* 5 cm = 188 px aproximadamente */
+      border: 1px solid #ccc;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+    #tokens {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #eee;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    #menu-chuletas {
+      margin-left: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="tokens">
+    Tokens restantes: <span id="tokenCount">19</span>
+  </div>
+
+  <h1>{{ site.title }}</h1>
+
+  <textarea id="inputText" placeholder="Pega aquí el texto a resumir"></textarea>
+
+  <input type="file" id="pdfInput" accept="application/pdf" style="margin-left:10px;" />
+
+  <select id="menu-chuletas">
+    <option value="resumen">Resumen</option>
+    <option value="lista">Lista de puntos</option>
+    <option value="definiciones">Definiciones</option>
+    <option value="cronologia">Cronología</option>
+  </select>
+
+  <button id="procesarBtn">Procesar</button>
+
+  <div id="resultados"></div>
+
+  <script>
+    // Variables para tokens
+    let tokens = 19;
+    const tokensPorChuleta = 5;
+
+    // Actualizar contador tokens
+    function actualizarTokens() {
+      document.getElementById('tokenCount').textContent = tokens;
+    }
+
+    actualizarTokens();
+
+    // Botón procesar
+    document.getElementById('procesarBtn').onclick = async function() {
+      if(tokens < tokensPorChuleta){
+        alert('No tienes suficientes tokens para generar una chuleta.');
+        return;
+      }
+
+      let texto = document.getElementById('inputText').value.trim();
+
+      if(!texto) {
+        alert('Por favor, pega un texto para resumir.');
+        return;
+      }
+
+      const tipoChuleta = document.getElementById('menu-chuletas').value;
+
+      // Simulamos llamada a ChatGPT 4mini para crear resumen
+      // Aquí debes conectar tu API de OpenAI o el método real
+      const resultado = `Tipo: ${tipoChuleta}\nResumen:\n${texto.substring(0, 150)}...`;
+
+      // Reducir tokens
+      tokens -= tokensPorChuleta;
+      actualizarTokens();
+
+      // Mostrar resultado
+      const contenedor = document.getElementById('resultados');
+      const nuevoCuadro = document.createElement('div');
+      nuevoCuadro.className = 'cuadro-chuleta';
+      nuevoCuadro.textContent = resultado;
+      contenedor.appendChild(nuevoCuadro);
+    };
+  </script>
+
+</body>
+</html>
